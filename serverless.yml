@@ -1,0 +1,29 @@
+service: lambda-ebs-bot
+
+frameworkVersion: '3'
+
+provider:
+  iam:
+    role:
+      name: lambdaEbsDelete2
+      statements:
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: 'ec2:*'
+        - Effect: 'Allow'
+          Resource: '*'
+          Action: 
+            - 'logs:CreateLogGroup'
+            - 'logs:CreateLogStream'
+            - 'logs:PutLogEvents'
+
+  name: aws
+  runtime: python3.8
+
+functions:
+  delete:
+    handler: handler.lambda_handler
+    description: Deletes unattached EBS volumes.
+    events:
+      # Invoke Lambda function every minute
+      - schedule: rate(1 minute)
